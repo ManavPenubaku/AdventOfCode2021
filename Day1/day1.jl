@@ -7,10 +7,8 @@ function find_increasing(input)
     for n in 2:length(input)
         if input[n]>temp
             increase_count+=1;
-            temp = input[n];
-        else
-            temp = input[n];
         end
+        temp = input[n];
     end
     return increase_count
 end
@@ -19,7 +17,7 @@ function find_sliding_increase(input)
     slide_sum =[];
     for n in 1:length(input)-2
         temp_sum = input[n]+input[n+1]+input[n+2];
-        slide_sum = append!(slide_sum,temp_sum);
+        append!(slide_sum,temp_sum);
     end
     return slide_sum;
 end
