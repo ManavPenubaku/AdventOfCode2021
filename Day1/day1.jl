@@ -2,14 +2,7 @@ using DelimitedFiles
 input = readdlm("input.txt");
 
 function find_increasing(input)
-    temp = input[1];
-    increase_count = 0;
-    for n in 2:length(input)
-        if input[n]>temp
-            increase_count+=1;
-        end
-        temp = input[n];
-    end
+    increase_count = sum(diff(input,dims=1).>0)
     return increase_count
 end
 
