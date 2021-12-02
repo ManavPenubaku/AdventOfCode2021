@@ -16,7 +16,7 @@ function find_sliding_increase(input)
 end
 
 sol1 = find_increasing(input)
-println("The solution to Part 1 is : ",sol1);
+println("Solution to Part 1 is : ",sol1);
 slide_sum = find_sliding_increase(input)
 sol2 = find_increasing(slide_sum);
-println("The solution to Part 2 is : ",sol2);
+println("Solution to Part 2 is : ",sol2);

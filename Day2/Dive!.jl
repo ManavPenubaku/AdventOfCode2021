@@ -22,3 +22,5 @@ function FindPosition(input)
 end
 
 sol1,sol2 = FindPosition(input);
+println("Solution to Part 1 is : ",sol1)
+println("Solution to Part 2 is : ",sol2)
