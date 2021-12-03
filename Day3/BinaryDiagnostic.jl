@@ -22,27 +22,23 @@ function Part2(input)
     oxygen_generator_rating = deepcopy(input);
     co2_scrubber_rate = deepcopy(input);
     for n in 1:length(input[1])
-        if (size(oxygen_generator_rating,1) == 1)
-            break
-        end
         oxygen_ones = findall(x->x.=="1",map(y->y[n][:],oxygen_generator_rating))
         oxygen_zeros = findall(x->x.=="0",map(y->y[n][:],oxygen_generator_rating))
-        if (length(oxygen_ones) >= length(oxygen_zeros))
-            oxygen_generator_rating = oxygen_generator_rating[oxygen_ones]
-        else
-            oxygen_generator_rating = oxygen_generator_rating[oxygen_zeros]
-        end
-    end
-    for n in 1:length(input[1])
-        if (size(co2_scrubber_rate,1) == 1)
-            break
+        if (size(oxygen_generator_rating,1)>1)
+            if (length(oxygen_ones) >= length(oxygen_zeros))
+                oxygen_generator_rating = oxygen_generator_rating[oxygen_ones]
+            else
+                oxygen_generator_rating = oxygen_generator_rating[oxygen_zeros]
+            end
         end
         co2_ones = findall(x->x.=="1",map(y->y[n],co2_scrubber_rate))
         co2_zeros = findall(x->x.=="0",map(y->y[n],co2_scrubber_rate))
-        if (length(co2_zeros) <= length(co2_ones))
-            co2_scrubber_rate = co2_scrubber_rate[co2_zeros]
-        else
-            co2_scrubber_rate = co2_scrubber_rate[co2_ones]
+        if (size(co2_scrubber_rate,1)>1)
+            if (length(co2_zeros) <= length(co2_ones))
+                co2_scrubber_rate = co2_scrubber_rate[co2_zeros]
+            else
+                co2_scrubber_rate = co2_scrubber_rate[co2_ones]
+            end
         end
     end
     return parse(Int,join(oxygen_generator_rating[1]),base=2)*parse(Int,join(co2_scrubber_rate[1]),base=2)
