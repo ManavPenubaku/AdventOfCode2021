@@ -11,7 +11,7 @@ fold_instructions =
 sheet = zeros(Int,rows+1,cols+1)
 println(size(sheet))
 for n in 1:size(dots,2)
-    sheet[dots[2,n],dots[1,n]] = 1
+    sheet[dots[2,n]+1,dots[1,n]+1] = 1
 end
 
 right_half = sheet[:,657:end]
