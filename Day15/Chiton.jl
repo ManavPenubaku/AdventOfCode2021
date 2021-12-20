@@ -29,6 +29,7 @@ function FindPath(ChitonDensity)
         if x_pos == size(ChitonDensity,1) && y_pos == size(ChitonDensity,2)
             destination_flag = 1
         end
+        println("(",x_pos,",",y_pos,")")
     end
     return risk_level
 end
