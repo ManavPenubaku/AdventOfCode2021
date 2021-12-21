@@ -40,7 +40,6 @@ function RepeatUpdates(polymer_template,pair_insertion_dict,step_count)
     for iter in 1:step_count
         polymer_template = UpdatePolymer(polymer_template,pair_insertion_dict)
     end
-    println(sum(collect(values(polymer_template))))
     element_dict = Dict()
     pairs_final = collect(keys(polymer_template))
     for n in 1:length(polymer_template)
