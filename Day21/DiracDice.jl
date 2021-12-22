@@ -1,6 +1,4 @@
-function PlayDiracDice1()
-    position_p1 = 4
-    position_p2 = 7
+function PlayDiracDice1(position_p1,position_p2)
     score_p1 = 0
     score_p2 = 0
     roll_count = 0
@@ -20,7 +18,14 @@ function PlayDiracDice1()
     return roll_count*3*score_p2
 end
 
-sol1 = PlayDiracDice1()
+function PlayDiracDice2(position_p1,position_p2)
+    
+end
+
+sol1 = PlayDiracDice1(4,7)
+println("Solution for Part 1 is : ",sol1)
+
+sol2 = PlayDiracDice2(4,7)
 
 
 
