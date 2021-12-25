@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("example.txt")
 lines = readlines(file)
 
 ChitonDensity = rotl90(reverse(parse.(Int,reduce(hcat,split.(lines,""))),dims=2))
@@ -13,7 +13,7 @@ function FindPath(ChitonDensity)
         end
     end
 
-    path_risk_map = cost_map .* ChitonDensity
+    path_risk_map = cost_map .+ ChitonDensity
 
     destination_flag = 0
     x_pos = 1
@@ -34,52 +34,14 @@ function FindPath(ChitonDensity)
                 y_pos += 1
                 risk_level += ChitonDensity[x_pos,y_pos]
             else
-                if (x_pos < size(ChitonDensity,1)-2 && y_pos < size(ChitonDensity,2)-2)
-                    if ChitonDensity[x_pos+3,y_pos] < ChitonDensity[x_pos,y_pos+3]
-                        risk_level += ChitonDensity[x_pos+1,y_pos] + ChitonDensity[x_pos+2,y_pos] + ChitonDensity[x_pos+3,y_pos]
-                        x_pos+=3
-                    elseif ChitonDensity[x_pos+3,y_pos] > ChitonDensity[x_pos,y_pos+3]
-                        risk_level += ChitonDensity[x_pos,y_pos+1] + ChitonDensity[x_pos,y_pos+2] + ChitonDensity[x_pos,y_pos+3]
-                        y_pos+=3
-                    end
-                    # Not considering alternate path
-                else
-                    if (x_pos == size(ChitonDensity,1)-1)
-                        if ChitonDensity[x_pos+1,y_pos+1] < ChitonDensity[x_pos,y_pos+2]
-                            x_pos+=1
-                            risk_level += ChitonDensity[x_pos,y_pos]
-                            y_pos+=1
-                            risk_level += ChitonDensity[x_pos,y_pos]
-                        else
-                            risk_level += ChitonDensity[x_pos,y_pos+1] + ChitonDensity[x_pos,y_pos+2]
-                            y_pos+=2
-                        end
-                    elseif (y_pos == size(ChitonDensity,2)-1)
-                        if ChitonDensity[x_pos+1,y_pos+1] < ChitonDensity[x_pos+2,y_pos]
-                            x_pos+=1
-                            risk_level += ChitonDensity[x_pos,y_pos]
-                            y_pos+=1
-                            risk_level += ChitonDensity[x_pos,y_pos]
-                        else
-                            risk_level += ChitonDensity[x_pos+1,y_pos] + ChitonDensity[x_pos+2,y_pos]
-                            x_pos+=2
-                        end
-                    end
-                end
-
-                # else
-                #     if (path_risk_map[x_pos+2,y_pos] < path_risk_map[x_pos,y_pos+2])
-                #         risk_level += ChitonDensity[x_pos+1,y_pos] + ChitonDensity[x_pos+2,y_pos]
-                #         x_pos+=2
-                #     elseif (path_risk_map[x_pos+2,y_pos] > path_risk_map[x_pos,y_pos+2])
-                #         risk_level += ChitonDensity[x_pos,y_pos+1] + ChitonDensity[x_pos,y_pos+2]
-                #         y_pos += 2
-                #     else
-                #         # println(x_pos)
-                #         # println(y_pos)
-                #         sleep(0.5)
-                #     end
-                # end
+            #    if (cost_map[x_pos+1,y_pos] < cost_map[x_pos,y_pos+1])
+            #         y_pos+=1
+            #         risk_level += ChitonDensity[x_pos,y_pos]
+            #    elseif (cost_map[x_pos+1,y_pos] > cost_map[x_pos,y_pos+1])
+            #         x_pos+=1
+            #         risk_level += ChitonDensity[x_pos,y_pos]
+            #    end
+                println("Can't Move Forward")
             end
         end
         if x_pos == size(ChitonDensity,1) && y_pos == size(ChitonDensity,2)
