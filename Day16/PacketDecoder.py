@@ -9,10 +9,10 @@ print(bin_input)
 def evaluate_packet_1(type_id,prev,current):
     eval = 0
     if(prev == -1): eval = current
-    elif(type_id == 0):eval = prev + current if current != 0 else prev
-    elif(type_id == 1):eval = prev * current if current != 0 else prev
-    elif(type_id == 2):eval = min(prev,current) if current != 0 else prev
-    elif(type_id == 3):eval = max(prev,current) if current != 0 else prev
+    elif(type_id == 0):eval = prev + current
+    elif(type_id == 1):eval = prev * current
+    elif(type_id == 2):eval = min(prev,current) 
+    elif(type_id == 3):eval = max(prev,current)
     return eval 
 
 def evaluate_packet_2(type_id,prev,current):
@@ -30,6 +30,7 @@ def parse_packet(binary_input,id,check_finish,operator_id):
     literal_value = 0
     packet_count = 0
     packet_value = -1
+    subpacket_value = 0
     prev_value = 0
     compare_flag = 0
     packet_id = 0
@@ -78,7 +79,7 @@ def parse_packet(binary_input,id,check_finish,operator_id):
                 if(length_type_id == 0):
                     sub_packet_length = min(len(binary_input),int(binary_input[cur_pos:cur_pos+15],2))
                     cur_pos+=15
-                    temp_sum,temp_pos,packet_value = parse_packet(binary_input[cur_pos:cur_pos+sub_packet_length],1,sub_packet_length,packet_id)
+                    temp_sum,temp_pos,subpacket_value = parse_packet(binary_input[cur_pos:cur_pos+sub_packet_length],1,sub_packet_length,packet_id)
                     packet_count+=1
                     cur_pos += sub_packet_length
                     packet_version_sum += temp_sum
@@ -86,19 +87,31 @@ def parse_packet(binary_input,id,check_finish,operator_id):
                 elif(length_type_id == 1):
                     sub_packet_count = int(binary_input[cur_pos:cur_pos+11],2)
                     cur_pos+=11
-                    temp_sum,temp_pos,packet_value = parse_packet(binary_input[cur_pos:],2,sub_packet_count,packet_id)
+                    temp_sum,temp_pos,subpacket_value = parse_packet(binary_input[cur_pos:],2,sub_packet_count,packet_id)
                     packet_count+=1
                     cur_pos += temp_pos
                     packet_version_sum += temp_sum
                     packet_ver_start = 1        
             
-            print(operator_id)    
-            if(operator_id < 4):
-                packet_value = evaluate_packet_1(operator_id,packet_value,literal_value)
-            elif(operator_id > 4):
-                packet_value = evaluate_packet_2(operator_id, packet_value, literal_value)
- 
-                
+            if(packet_id == 4):
+                print(cur_pos)
+                print(packet_value)
+                print(subpacket_value)
+                if(operator_id < 4):
+                    packet_value = evaluate_packet_1(operator_id,packet_value,literal_value)
+                elif(operator_id > 4):
+                    packet_value = evaluate_packet_2(operator_id, packet_value,literal_value)
+            else:
+                print(cur_pos)
+                print(packet_value)
+                print(subpacket_value)
+                if(operator_id < 4):
+                    packet_value = evaluate_packet_1(operator_id,packet_value,subpacket_value)
+                elif(operator_id > 4):
+                    packet_value = evaluate_packet_2(operator_id, packet_value,subpacket_value)
+                else:
+                    packet_value = subpacket_value
+
     return packet_version_sum,cur_pos,packet_value
 
 sol1,packet_pos,sol2 = parse_packet(bin_input[2:], 1, len(bin_input[2:]),4)
