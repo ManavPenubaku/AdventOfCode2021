@@ -1,22 +1,24 @@
-from future.backports.xmlrpc.client import Binary
-from PIL.features import check
-from _operator import sub
+import copy
+
 lines = []
-with open('example.txt') as f:
+with open('input.txt') as f:
     lines = f.readlines()
 
 hexadecimal_input = lines[0].strip()
 bin_input = bin(int(hexadecimal_input,16))
+print(bin_input)
 
-def parse_packet(binary_input,id,check_finish):
+def parse_packet(input_string,id,check_finish):
+    binary_input = copy.deepcopy(input_string)
     packet_ver_start = 1
     cur_pos = 0
     packet_version_sum = 0
     literal_value = []
     packet_count = 0;
     while True:
+        print(binary_input)
+        print(packet_version_sum)
         if(packet_ver_start == 1):
-            print(binary_input[cur_pos:cur_pos+3])
             packet_version_sum += int(binary_input[cur_pos:cur_pos+3],2)
             packet_ver_start = 0
             packet_id_start = 1
@@ -39,7 +41,7 @@ def parse_packet(binary_input,id,check_finish):
                     break
                 else:
                     cur_pos+=5
-        else:
+        elif(packet_id != 4):
             length_type_id = int(binary_input[cur_pos],2)
             cur_pos+=1
             if(length_type_id == 0):
