@@ -1,92 +1,67 @@
-file = open("example.txt")
+using DataStructures
+
+file = open("input.txt")
 lines = readlines(file)
 
 ChitonDensity = rotl90(reverse(parse.(Int,reduce(hcat,split.(lines,""))),dims=2))
 
-function FindPath(ChitonDensity)
-    row_count = size(ChitonDensity,1)
-    col_count = size(ChitonDensity,2)
-    cost_map = min.(circshift(ChitonDensity,(0,-1))[1:row_count-1,1:col_count-1],circshift(ChitonDensity,(-1,0))[1:row_count-1,1:col_count-1])
-    cost_map = [cost_map ChitonDensity[2:row_count,col_count]]
-    cost_map = vcat(cost_map,transpose([ChitonDensity[row_count,2:col_count];ChitonDensity[row_count,col_count]]))
-    
-    return cost_map_2 .* cost_map .* ChitonDensity
-   
-    path_risk_map = cost_map .* ChitonDensity
-    destination_flag = 0
-    x_pos = 1
-    y_pos = 1
-    risk_level = 0
-    temp_x_pos = 1
-    temp_y_pos = 1
-
-    max_value = 8
-    while(destination_flag == 0)
-        println(x_pos, " ",y_pos)
-        if (x_pos == size(ChitonDensity,1))
-            y_pos+=1
-            risk_level += ChitonDensity[x_pos,y_pos]
-        elseif (y_pos == size(ChitonDensity,2))
-            x_pos+=1
-            risk_level += ChitonDensity[x_pos,y_pos]
-        else
-            # println(path_risk_map[x_pos+1,y_pos+1])
-            # println(path_risk_map[x_pos+1,y_pos])
-            # println(path_risk_map[x_pos+2,y_pos])
-            # println(path_risk_map[x_pos,y_pos+2])
-            # println(path_risk_map[x_pos+2,y_pos+1])
-            # println(path_risk_map[x_pos+1,y_pos+2])
-            # sleep(0.5)
-            if (path_risk_map[x_pos+1,y_pos] < path_risk_map[x_pos,y_pos+1]) && ChitonDensity[x_pos+1,y_pos] <= 8
-                x_pos += 1
-                risk_level += ChitonDensity[x_pos,y_pos]
-            elseif (path_risk_map[x_pos+1,y_pos] > path_risk_map[x_pos,y_pos+1]) && ChitonDensity[x_pos,y_pos+1] <= 8
-                y_pos += 1
-                risk_level += ChitonDensity[x_pos,y_pos]
-            else
-                temp_x_pos = x_pos+1
-                temp_y_pos = y_pos+1
-                if (temp_x_pos == size(ChitonDensity,1))
-                    risk_level += ChitonDensity[x_pos,y_pos+1] + ChitonDensity[x_pos,y_pos+2]
-                    y_pos += 2
-                elseif (temp_y_pos == size(ChitonDensity,2))
-                    risk_level += ChitonDensity[x_pos+1,y_pos] + ChitonDensity[x_pos+2,y_pos]
-                    x_pos += 2
-                elseif (path_risk_map[temp_x_pos,temp_y_pos] < path_risk_map[x_pos,y_pos+1]) && ChitonDensity[temp_x_pos,temp_y_pos] <= max_value
-                    x_pos += 1
-                    risk_level += ChitonDensity[x_pos,y_pos]
-                    y_pos += 1
-                    risk_level += ChitonDensity[x_pos,y_pos]
-                elseif (path_risk_map[temp_x_pos+1,temp_y_pos] < path_risk_map[temp_x_pos,temp_y_pos+1]) && ChitonDensity[temp_x_pos+1,temp_y_pos]<= max_value
-                    x_pos += 1
-                    risk_level += ChitonDensity[x_pos,y_pos]
-                    x_pos += 1
-                    risk_level += ChitonDensity[x_pos,y_pos]
-                    y_pos += 1
-                    risk_level += ChitonDensity[x_pos,y_pos]
-                elseif (path_risk_map[temp_x_pos+1,temp_y_pos] > path_risk_map[temp_x_pos,temp_y_pos+1]) && ChitonDensity[temp_x_pos,temp_y_pos+1]<= max_value
-                    y_pos += 1
-                    risk_level += ChitonDensity[x_pos,y_pos]
-                    y_pos += 1
-                    risk_level += ChitonDensity[x_pos,y_pos]
-                    x_pos += 1
-                    risk_level += ChitonDensity[x_pos,y_pos]
-                elseif (path_risk_map[x_pos+2,y_pos] < path_risk_map[x_pos,y_pos+2]) && ChitonDensity[x_pos+2,y_pos] <= max_value
-                    risk_level += ChitonDensity[x_pos+1,y_pos] + ChitonDensity[x_pos+2,y_pos]
-                    x_pos += 2
-                elseif (path_risk_map[x_pos+2,y_pos] > path_risk_map[x_pos,y_pos+2]) && ChitonDensity[x_pos,y_pos+2] <= max_value
-                    risk_level += ChitonDensity[x_pos,y_pos+1] + ChitonDensity[x_pos,y_pos+2]
-                    y_pos += 2
-                else
-                    println("Can't Move Forward")
-                end
+function ConstructGraph(CaveDensity)
+    neighbor_dict = Dict()
+    cost_dict = Dict()
+    for i in 1:size(CaveDensity,1)
+        for j in 1:size(CaveDensity,2)
+            if i == size(CaveDensity,1) && j!= size(CaveDensity,2)
+                neighbor_dict[(i,j)] = [(i,j+1) (i-1,j)]
+                cost_dict[(i,j),(i,j+1)] = CaveDensity[i,j+1]
+                cost_dict[(i,j),(i-1,j)] = CaveDensity[i-1,j]
+            elseif i != size(CaveDensity,1) && j == size(CaveDensity,2)
+                neighbor_dict[(i,j)] = [(i+1,j) (i,j-1)]
+                cost_dict[(i,j),(i+1,j)] = CaveDensity[i+1,j]
+                cost_dict[(i,j),(i,j-1)] = CaveDensity[i,j-1]
+            elseif i > 1 && i < size(CaveDensity,1) && j>1 && j < size(CaveDensity,2)
+                neighbor_dict[(i,j)] = [(i,j+1) (i+1,j) (i-1,j) (i,j-1)]
+                cost_dict[(i,j),(i+1,j)] = CaveDensity[i+1,j] 
+                cost_dict[(i,j),(i,j+1)] = CaveDensity[i,j+1]
+                cost_dict[(i,j),(i,j-1)] = CaveDensity[i,j-1]
+                cost_dict[(i,j),(i-1,j)] = CaveDensity[i-1,j]
+            elseif i != size(CaveDensity,1) && j != size(CaveDensity,2)
+                neighbor_dict[(i,j)] = [(i,j+1) (i+1,j)]
+                cost_dict[(i,j),(i+1,j)] = CaveDensity[i+1,j] 
+                cost_dict[(i,j),(i,j+1)] = CaveDensity[i,j+1]
             end
         end
-        if x_pos == size(ChitonDensity,1) && y_pos == size(ChitonDensity,2)
-            destination_flag = 1
-        end
     end
-    return risk_level
+    return neighbor_dict,cost_dict
 end
 
-sol1 = FindPath(ChitonDensity)
+function DijkstraSearch(neighbor_dict,cost_dict,start,goal)
+    pq = PriorityQueue()
+    enqueue!(pq, start, 0)
+    cost_so_far = Dict()
+    cost_so_far[start] = 0
+    while !isempty(pq)
+        current = dequeue!(pq)
+        if current == goal
+            break
+        end
+        for next in neighbor_dict[current]
+            new_cost = cost_so_far[current] + cost_dict[(current,next)]
+            if !haskey(cost_so_far,next) || new_cost < cost_so_far[next]
+                cost_so_far[next] = new_cost
+                priority = new_cost
+                enqueue!(pq,next,priority)
+            end
+        end
+    end
+    return cost_so_far[goal]
+end
+
+NeighborDict,CostDict = ConstructGraph(ChitonDensity)
+sol1 = DijkstraSearch(NeighborDict,CostDict,(1,1),(size(ChitonDensity,1),size(ChitonDensity,2)))
+println("Solution to Part 1 is : ",sol1)
+
+ChitonDensityRepeatX = reduce(hcat,map(x->mod1.(ChitonDensity.+x,9),collect(0:1:4)))
+FullCaveDensity = reduce(vcat,map(x->mod1.(ChitonDensityRepeatX.+x,9),collect(0:1:4)))
+NeighborDict2,CostDict2 = ConstructGraph(FullCaveDensity)
+sol2 = DijkstraSearch(NeighborDict2,CostDict2,(1,1),(size(FullCaveDensity,1),size(FullCaveDensity,2)))
+println("Solution to Part 2 is : ",sol2)

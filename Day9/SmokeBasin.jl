@@ -1,6 +1,6 @@
 file = open("input.txt")
 lines = readlines(file)
-input = parse.(Int,reduce(hcat,split.(lines,"")))
+input = rotl90(reverse(parse.(Int,reduce(hcat,split.(lines,""))),dims=2))
 padded_input = deepcopy(input)
 padded_input = [ones(Int,size(input,1),1).*10 padded_input ones(Int,size(input,1),1).*10]
 padded_input = [ones(Int,1,size(padded_input,2)).*10;padded_input;ones(Int,1,size(padded_input,2)).*10]
@@ -27,33 +27,37 @@ smoke_basin = deepcopy(padded_input)
 smoke_basin[findall(x->x != 9,smoke_basin)] .= 0
 map(x->smoke_basin[lowest_point_list[x,1],lowest_point_list[x,2]] = 1,collect(1:1:size(lowest_point_list,1)))
 smoke_basin = smoke_basin[2:end-1,2:end-1]
+lowest_point_list .-= 1
 
-function MoveInBasin(basin_layout,current_point)
-    current_row = current_point[1]
-    current_col = current_point[2]
-    search_done = 0;
-    path = current_row+current_col*100;
-    while search_done == 0
-        if (current_col != 100 && basin_layout[current_row][current_col+1] != 9 && sum(path .== (current_row+(current_col+1)*100)) == 0)
-            current_col += 1
-        elseif (current_row != 100 && basin_layout[current_row+1][current_col] != 9 && sum(path .== (current_row+(current_col+1)*100)) == 0)
-            current_row +=1
-        elseif (current_col != 1 && basin_layout[current_row][current_col-1] != 9)
-            current_col -= 1
-        elseif (current_row != 1 && basin_layout[current_row-1][current_col] != 9)
-            current_row -= 1
-        else
-            search_done = 1
+function BreadthFirstSearch(grid,source)
+    basin_size = Dict(source => 1)
+    queue = [source]
+    dRow = [-1 0 1 0]
+    dCol = [0 -1 0 1]
+    while !isempty(queue)
+        current = splice!(queue,1)
+        for n in 1:4
+            xindex = current[1] + dRow[n]
+            yindex = current[2] + dCol[n]
+            neighbor = [xindex,yindex]
+            if (1<= xindex <= size(grid,1)) && (1 <= yindex <= size(grid,2)) && !haskey(basin_size,neighbor) && grid[xindex,yindex] != 9
+                basin_size[neighbor] = basin_size[current] + 1
+                push!(queue,neighbor)
+            end
         end
-        append!(path,current_row+current_col*100)
     end
-    return length(path)
+    return length(basin_size)
 end
 
 function FindBasins(smoke_basin,lowest_point_list)
     lowest_point_count = size(lowest_point_list,1)
-    basin_size = Array{Int}(undef,lowest_point_count,1)
-    for n in 1:lowest_point_count
-        basin_size[n] = MoveInBasin(smoke_basin,lowest_point_list[n,:])
+    basin_size = Array{Int}(undef,lowest_point_count)
+    for n in 1:size(lowest_point_list,1)
+        append!(basin_size,BreadthFirstSearch(smoke_basin,lowest_point_list[n,:]))
     end
+    basin_size = sort(basin_size)
+    return prod(basin_size[end-2:end])
 end
+
+sol2 = FindBasins(smoke_basin,lowest_point_list)
+println("Solution to Part 2 is : ",sol2)
