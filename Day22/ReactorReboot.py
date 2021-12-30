@@ -1,5 +1,5 @@
 import re
-from gi._compat import xrange
+import copy
 
 lines = []
 with open('input.txt') as f:
@@ -13,76 +13,51 @@ for line in lines:
     cuboid_list.append(p_coord.findall(line.strip()))
     state_list.append(p_state.findall(line.strip()))
 
-region = [[[0 for k in xrange(101)]for j in xrange(101)]for i in xrange(101)]
-
-on_cubes = 0;
-
-for n in range(len(state_list)):
-    cuboid_indices = list(map(lambda x: int(x)+50,cuboid_list[n]))
-    within_bounds = list(map(lambda x: x>=0 and x<=100,cuboid_indices))
-    if(sum(within_bounds) == 6):
-        if state_list[n][0] == 'on':
-            for i in range(cuboid_indices[0],cuboid_indices[1]+1):
-                for j in range(cuboid_indices[2],cuboid_indices[3]+1):
-                    for k in range(cuboid_indices[4],cuboid_indices[5]+1):
-                        if(region[i][j][k] == 0):
-                            region[i][j][k] = 1
-                            on_cubes+=1
-        else:
-            for i in range(cuboid_indices[0],cuboid_indices[1]+1):
-                for j in range(cuboid_indices[2],cuboid_indices[3]+1):
-                    for k in range(cuboid_indices[4],cuboid_indices[5]+1):
-                        if(region[i][j][k] == 1):
-                            region[i][j][k] = 0
-                            on_cubes-=1
-
-
-print(on_cubes)
-
 def CheckCubeIntersection(cube1,cube2):
-    no_intersection = 0
-    xmin_int = cube1[0]
-    ymin_int  = cube1[2]
-    zmin_int = cube1[4]
-    if(cube1[0] > cube2[1]):
-        no_intersection+=1
-    elif(cube1[0] >= cube2[0]):
-        xmin_int = cube1[0]
-    elif(cube1[1] >= cube2[0]):
-        xmin_int = cube2[0]
-        
-    if(cube1[2] > cube2[3]):
-        no_intersection+=1
-    elif(cube1[2] >= cube2[2]):
-        ymin_int = cube1[2]
-    elif(cube2[2] <= cube1[3]):
-        ymin_int = cube2[2]
-    
-    if(cube1[4] > cube2[5]):
-        no_intersection+=1
-    elif(cube1[4] >= cube2[4]):
-        zmin_int = cube1[4]
-    elif(cube2[4] <= cube1[5]):
-        zmin_int = cube2[4]
-        
-    if (no_intersection == 3):
-        return 0,cube1
+    xmin_int = max(cube1[0],cube2[0])
+    xmax_int = min(cube1[1],cube2[1])
+    ymin_int = max(cube1[2],cube2[2])
+    ymax_int = min(cube1[3],cube2[3])
+    zmin_int = max(cube1[4],cube2[4])
+    zmax_int = min(cube1[5],cube2[5])
+    if xmin_int <= xmax_int and ymin_int <= ymax_int and zmin_int <= zmax_int : 
+        return 1,tuple([xmin_int,xmax_int,ymin_int,ymax_int,zmin_int,zmax_int])
     else:
-        return 1,[xmin_int,cube1[1],ymin_int,cube1[3],zmin_int,cube1[5]]
+        return 0,cube1
+    
+def ExecuteRebootSteps(step_count,state_list,cuboid_list):
+    first_cube = tuple(map(lambda x: int(x),cuboid_list[0]))
+    volume_dict = {first_cube : 1}
+    for n in range(1,step_count,1):
+        cuboid2 = tuple(map(lambda x: int(x),cuboid_list[n]))
+        new_volume_dict = copy.deepcopy(volume_dict)
+        for cuboid,sign in volume_dict.items():
+            int_flag,int_coord = CheckCubeIntersection(cuboid,cuboid2)
+            if (int_flag == 1):
+                if int_coord in new_volume_dict:
+                    new_volume_dict[int_coord] -= sign 
+                else:
+                    new_volume_dict[int_coord] = -sign
+        if state_list[n][0] == 'on':
+            if(cuboid2 in new_volume_dict):
+                new_volume_dict[cuboid2] += 1
+            else:
+                new_volume_dict[cuboid2] = 1
+        volume_dict = copy.deepcopy(new_volume_dict)
+        volume_dict = dict(filter(lambda x : x[1] != 0,volume_dict.items()))     
+    total_volume = 0
+    for cuboid,sign in volume_dict.items():
+        volume = (cuboid[1]-cuboid[0]+1)*(cuboid[3]-cuboid[2]+1)*(cuboid[5]-cuboid[4]+1)
+        signed_volume = sign * volume
+        total_volume += signed_volume
+    return total_volume
 
-non_intersecting_list = [list(map(lambda x: int(x),cuboid_list[0]))]
-for n in range(1,20,1):
-    cuboid_2 = list(map(lambda x: int(x),cuboid_list[n]))
-    for cuboid in non_intersecting_list:
-        int_flag,int_coord = CheckCubeIntersection(cuboid,cuboid_2)
-        if (int_flag == 0):
-            non_intersecting_list.append(cuboid_2)
-        else:
-            print(int_coord)
+volume_p1 = ExecuteRebootSteps(20, state_list,cuboid_list)
+print("Solution to Part 1 is : ",volume_p1)
+volume_p2 = ExecuteRebootSteps(len(state_list), state_list, cuboid_list)
+print("Solution to Part 2 is : ",volume_p2)
+            
+
         
-print(non_intersecting_list)
-            
-            
-            
             
             
