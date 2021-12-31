@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("/home/manav/AdventOfCode2021/Julia/input/day6.txt")
 lines = readlines(file)
 input = sort(vec(parse.(Int,reduce(hcat,split.(lines,",")))))
 

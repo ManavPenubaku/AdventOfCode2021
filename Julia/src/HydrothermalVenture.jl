@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("/home/manav/AdventOfCode2021/Julia/input/day5.txt")
 lines = readlines(file)
 reg = r"(.+),(.+) -> (.+),(.+)"
 input = map(y->parse.(Int,y),map(x->x.captures,match.(reg,lines)))

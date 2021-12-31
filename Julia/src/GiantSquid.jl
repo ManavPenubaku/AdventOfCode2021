@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("/home/manav/AdventOfCode2021/Julia/input/day4.txt")
 lines = readlines(file)
 
 number_sequence = parse.(Int,split(lines[1],","))

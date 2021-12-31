@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("/home/manav/AdventOfCode2021/Julia/input/day3.txt")
 lines = readlines(file);
 input = split.(lines,"");
 

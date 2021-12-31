@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("/home/manav/AdventOfCode2021/Julia/input/day9.txt")
 lines = readlines(file)
 input = rotl90(reverse(parse.(Int,reduce(hcat,split.(lines,""))),dims=2))
 padded_input = deepcopy(input)

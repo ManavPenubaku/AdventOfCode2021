@@ -1,6 +1,6 @@
 using DelimitedFiles
 
-input = readdlm("input.txt")
+input = readdlm("/home/manav/AdventOfCode2021/Julia/input/day25.txt")
 sea_cucumber_map = rotl90(reverse(reduce(hcat,split.(input,"")),dims=2))
 
 function MoveSeaCucumbers(sea_cucumber_map)
@@ -21,6 +21,6 @@ function MoveSeaCucumbers(sea_cucumber_map)
     return step_count
 end
 
-sol1 = MoveSeaCucumbers(SeaCucumberMap)
+sol1 = MoveSeaCucumbers(sea_cucumber_map)
 println("Solution to Part 1 is : ",sol1)
 

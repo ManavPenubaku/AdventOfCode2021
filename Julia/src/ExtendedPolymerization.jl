@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("/home/manav/AdventOfCode2021/Julia/input/day14.txt")
 lines = readlines(file)
 
 polymer_template = lines[1]

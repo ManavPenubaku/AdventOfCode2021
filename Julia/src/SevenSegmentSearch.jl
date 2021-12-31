@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("/home/manav/AdventOfCode2021/Julia/input/day8.txt")
 lines = readlines(file)
 
 reg = r"(.+) \| (.+)"

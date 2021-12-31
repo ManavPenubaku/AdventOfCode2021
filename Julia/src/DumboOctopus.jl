@@ -1,4 +1,4 @@
-file = open("input.txt")
+file = open("/home/manav/AdventOfCode2021/Julia/input/day11.txt")
 input = parse.(Int,reduce(hcat,split.(readlines(file),"")))
 
 function SimulateFlashes(input)

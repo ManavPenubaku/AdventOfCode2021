@@ -1,6 +1,6 @@
 using DelimitedFiles
 
-input = readdlm("input.txt")
+input = readdlm("/home/manav/AdventOfCode2021/Julia/input/day24.txt")
 
 function RunSubsetInstructions(input,variable_dict_in,x1,x2)
     instructions_1 = input[x1:x2,:]

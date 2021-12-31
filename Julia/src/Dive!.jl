@@ -1,5 +1,5 @@
 using DelimitedFiles
-input = readdlm("input.txt");
+input = readdlm("/home/manav/AdventOfCode2021/Julia/input/day2.txt");
 
 function FindPosition(input)
     pos = [0,0];
