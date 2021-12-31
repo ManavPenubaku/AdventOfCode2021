@@ -1,4 +1,6 @@
-file = open("/home/manav/AdventOfCode2021/Julia/input/day8.txt")
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day8.txt"
+file = open(inp_path)
 lines = readlines(file)
 
 reg = r"(.+) \| (.+)"

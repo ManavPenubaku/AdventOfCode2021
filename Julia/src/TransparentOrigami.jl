@@ -1,5 +1,6 @@
-file = open("/home/manav/AdventOfCode2021/Julia/input/day13.txt")
-
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day13.txt"
+file = open(inp_path)
 lines = readlines(file)
 
 dots = parse.(Int,reduce(hcat,split.(lines[1:1004],",")))

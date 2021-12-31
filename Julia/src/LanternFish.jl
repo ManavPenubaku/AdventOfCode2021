@@ -1,4 +1,6 @@
-file = open("/home/manav/AdventOfCode2021/Julia/input/day6.txt")
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day6.txt"
+file = open(inp_path)
 lines = readlines(file)
 input = sort(vec(parse.(Int,reduce(hcat,split.(lines,",")))))
 

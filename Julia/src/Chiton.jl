@@ -1,6 +1,8 @@
 using DataStructures
 
-file = open("/home/manav/AdventOfCode2021/Julia/input/day15.txt")
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day15.txt"
+file = open(inp_path)
 lines = readlines(file)
 
 ChitonDensity = rotl90(reverse(parse.(Int,reduce(hcat,split.(lines,""))),dims=2))

@@ -1,4 +1,6 @@
-file = open("/home/manav/AdventOfCode2021/Julia/input/day7.txt")
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day7.txt"
+file = open(inp_path)
 lines = readlines(file)
 
 input = parse.(Int,String.(reduce(hcat,split.(lines,","))))

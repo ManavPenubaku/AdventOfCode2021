@@ -1,5 +1,7 @@
 using DelimitedFiles
-input = readdlm("/home/manav/AdventOfCode2021/Julia/input/day1.txt");
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day1.txt"
+input = readdlm(inp_path);
 
 function find_increasing(input)
     increase_count = sum(diff(input,dims=1).>0)

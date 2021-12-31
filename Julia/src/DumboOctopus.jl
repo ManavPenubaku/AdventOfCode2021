@@ -1,4 +1,6 @@
-file = open("/home/manav/AdventOfCode2021/Julia/input/day11.txt")
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day11.txt"
+file = open(inp_path)
 input = parse.(Int,reduce(hcat,split.(readlines(file),"")))
 
 function SimulateFlashes(input)

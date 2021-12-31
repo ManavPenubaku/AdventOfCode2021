@@ -1,4 +1,6 @@
-file = open("/home/manav/AdventOfCode2021/Julia/input/day4.txt")
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day4.txt"
+file = open(inp_path)
 lines = readlines(file)
 
 number_sequence = parse.(Int,split(lines[1],","))

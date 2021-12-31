@@ -1,6 +1,7 @@
 using DelimitedFiles
-
-input = readdlm("/home/manav/AdventOfCode2021/Julia/input/day25.txt")
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day25.txt"
+input = readdlm(inp_path)
 sea_cucumber_map = rotl90(reverse(reduce(hcat,split.(input,"")),dims=2))
 
 function MoveSeaCucumbers(sea_cucumber_map)

@@ -1,4 +1,6 @@
-file = open("/home/manav/AdventOfCode2021/Julia/input/day5.txt")
+cur_dir = pwd()
+inp_path = cur_dir * "/input/day5.txt"
+file = open(inp_path)
 lines = readlines(file)
 reg = r"(.+),(.+) -> (.+),(.+)"
 input = map(y->parse.(Int,y),map(x->x.captures,match.(reg,lines)))
