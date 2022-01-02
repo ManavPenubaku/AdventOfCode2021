@@ -1,52 +1,63 @@
 import math
+import copy
 
-lines = []
-with open('input.txt') as f:
+with open('example.txt') as f:
     lines = f.readlines()
-    
-current_line = lines[0].strip()
+
+def split(equation):
+    equation = equation.strip().replace(',','')
+    split_equation = [char for char in equation]
+    for n in range(len(split_equation)):
+        split_equation[n] = split_equation[n] if not split_equation[n].isnumeric() else int(split_equation[n])
+    return split_equation
+
+current_sum = split(lines[0])
 line_list = lines[1:]
+
 for line in line_list:
+    next_line = (split(line))
+    line_sum = []
+    line_sum.extend('[')
+    line_sum.extend(current_sum)
+    line_sum.extend(next_line)
+    line_sum.extend(']')
     pair_count = 0
-    add_line = line.strip()
-    current_line = "[" + current_line + "," + add_line + "]"
     cur_pos = 0
     shift_index = 1
-    while cur_pos < len(current_line):
-        pair_count += 1 if current_line[cur_pos] == "[" else 0
-        pair_count -= 1 if current_line[cur_pos] == "]" else 0
+    while cur_pos < len(line_sum)-2:
+        pair_count += 1 if line_sum[cur_pos] == "[" else 0
+        pair_count -= 1 if line_sum[cur_pos] == "]" else 0
         split_flag = 0
-        left_insert = ""
-        right_insert = ""
-        if(current_line[cur_pos].isnumeric() and current_line[cur_pos+2].isnumeric() and pair_count >= 5):
-            temp_left = current_line[cur_pos]
-            temp_right = current_line[cur_pos+2]
-            current_line = current_line[0:cur_pos-1] + "0" + current_line[cur_pos+4:]
-            cur_pos-=1
-            ind_right = next((i for i,v in enumerate(current_line[cur_pos+1:]) if v.isnumeric()),None)
-            ind_left = next((i for i,v in enumerate(current_line[:cur_pos][::-1]) if v.isnumeric()),None)
-            if ind_left is not None:
-                left_neighbor = int(current_line[cur_pos-ind_left-1]) + int(temp_left)
-                if left_neighbor >= 10:
-                    split_flag = 1
-                    left_insert = "[" + str(math.floor(left_neighbor/2)) + "," + str(math.ceil(left_neighbor/2)) + "]"
-                else:
-                    left_insert = str(left_neighbor)
-                current_line = current_line[0:cur_pos-ind_left-1] + left_insert + current_line[cur_pos-ind_left :]
-            if ind_right is not None:
-                shift_index = 1 if len(left_insert) == 0 else len(left_insert)
-                right_neighbor = int(current_line[cur_pos+ind_right+shift_index]) + int(temp_right)
-                if right_neighbor >= 10:
-                    split_flag = 1
-                    right_insert = "[" + str(math.floor(right_neighbor/2)) + "," + str(math.ceil(right_neighbor/2)) + "]"
-                else:
-                    right_insert = str(right_neighbor)    
-                current_line = current_line[0:cur_pos+ind_right+shift_index] + right_insert + current_line[cur_pos+ind_right+shift_index+1:]
+        if(isinstance(line_sum[cur_pos+1],int) and isinstance(line_sum[cur_pos+2],int) and pair_count >= 5):
+            print(line_sum)
+            temp_left = line_sum[cur_pos+1]
+            temp_right = line_sum[cur_pos+2]
+            line_sum[cur_pos] = 0
+            del line_sum[cur_pos+1:cur_pos+4]
+            ind_right = next((i for i,v in enumerate(line_sum[cur_pos+1:]) if isinstance(v,int)),None)
+            ind_left = next((i for i,v in enumerate(line_sum[:cur_pos][::-1]) if isinstance(v,int)),None)
             
-            cur_pos = -1 if split_flag==1 else cur_pos-1
-            pair_count = 0 if split_flag==1 else pair_count-1
+            if ind_left is not None:
+                line_sum[cur_pos-ind_left-1] += temp_left
+            
+            if ind_right is not None:
+                line_sum[cur_pos+ind_right+1] += temp_right
+            
+            cur_pos = -1
+            pair_count = 0  
+        elif(isinstance(line_sum[cur_pos],int) and line_sum[cur_pos] >= 10):
+            print(line_sum)
+            temp_sum = []
+            temp_sum.extend(line_sum[0:cur_pos])
+            temp_sum.extend(['[', math.floor(line_sum[cur_pos]/2),math.ceil(line_sum[cur_pos]/2),']'])
+            temp_sum.extend(line_sum[cur_pos+1:])
+            line_sum = copy.deepcopy(temp_sum)
+            cur_pos = -1
+            pair_count = 0
             
         cur_pos+=1
         
-print(current_line)
+    current_sum = copy.deepcopy(line_sum)
+        
+print(current_sum)
         

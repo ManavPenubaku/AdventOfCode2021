@@ -62,11 +62,11 @@ end
 
 
 variable_dict_p1 = Dict("" => Dict("w" => 0,"x" => 0,"y" => 0,"z" => 0))
-model_number_list = RunSubsetInstructions(input,variable_dict,1,18,1)
+model_number_list = RunSubsetInstructions(input,variable_dict_p1,1,18,1)
 sol1 = collect(keys(filter(p->p.second["z"] == 0,model_number_list)))
 println("Solution to Part 1 is : ",sol1[1])
 
 variable_dict_p2 = Dict("" => Dict("w" => 0,"x" => 0,"y" => 0,"z" => 0))
-model_number_list = RunSubsetInstructions(input,variable_dict,1,18,2)
+model_number_list = RunSubsetInstructions(input,variable_dict_p2,1,18,2)
 sol2 = collect(keys(filter(p->p.second["z"] == 0,model_number_list)))
 println("Solution to Part 2 is : ",sol2[1])
