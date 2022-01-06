@@ -1,5 +1,5 @@
 lines = []
-with open('input.txt') as f:
+with open('../input/day10.txt') as f:
     lines = f.readlines()
 
 chunks = ['{}','[]','<>','()']

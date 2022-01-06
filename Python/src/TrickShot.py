@@ -1,7 +1,7 @@
 import re
 
 lines = []
-with open('input.txt') as f:
+with open('../input/day17.txt') as f:
     lines = f.readlines()
 
 p_targets = re.compile(r'-\d+|\d+')

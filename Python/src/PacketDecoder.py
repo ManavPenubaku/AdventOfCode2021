@@ -1,10 +1,9 @@
 lines = []
-with open('input.txt') as f:
+with open('../input/day16.txt') as f:
     lines = f.readlines()
 
 hexadecimal_input = lines[0].strip()
 bin_input = bin(int(hexadecimal_input,16))
-print(bin_input)
 
 def evaluate_packet_1(type_id,prev,current):
     eval = 0
@@ -31,8 +30,6 @@ def parse_packet(binary_input,id,check_finish,operator_id):
     packet_count = 0
     packet_value = -1
     subpacket_value = 0
-    prev_value = 0
-    compare_flag = 0
     packet_id = 0
     while True:         
         if(id == 2):
@@ -94,17 +91,11 @@ def parse_packet(binary_input,id,check_finish,operator_id):
                     packet_ver_start = 1        
             
             if(packet_id == 4):
-                print(cur_pos)
-                print(packet_value)
-                print(subpacket_value)
                 if(operator_id < 4):
                     packet_value = evaluate_packet_1(operator_id,packet_value,literal_value)
                 elif(operator_id > 4):
                     packet_value = evaluate_packet_2(operator_id, packet_value,literal_value)
             else:
-                print(cur_pos)
-                print(packet_value)
-                print(subpacket_value)
                 if(operator_id < 4):
                     packet_value = evaluate_packet_1(operator_id,packet_value,subpacket_value)
                 elif(operator_id > 4):

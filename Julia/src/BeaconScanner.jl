@@ -1,7 +1,7 @@
 using LinearAlgebra
 
 cur_dir = pwd()
-inp_path = cur_dir * "/input/day19.txt"
+inp_path = cur_dir * "/input/day19_example.txt"
 file = open(inp_path)
 lines = readlines(file)
 

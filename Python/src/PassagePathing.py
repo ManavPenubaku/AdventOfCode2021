@@ -6,7 +6,7 @@ graph = defaultdict(list)
 def addEdge(graph,u,v):
     graph[u].append(v)
 
-with open('input.txt') as f:
+with open('../input/day12.txt') as f:
     for line in f.readlines():
         vertices = (line.strip()).split('-')
         if vertices[1] == 'start' or vertices[0] == 'end':

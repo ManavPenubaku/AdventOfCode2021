@@ -1,7 +1,7 @@
 import math
 import copy
 
-with open('input.txt') as f:
+with open('../input/day18.txt') as f:
     lines = f.readlines()
 
 def split(equation):

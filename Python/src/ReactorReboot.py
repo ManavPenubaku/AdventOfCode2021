@@ -2,7 +2,7 @@ import re
 import copy
 
 lines = []
-with open('input.txt') as f:
+with open('../input/day22.txt') as f:
     lines = f.readlines()
 
 p_coord = re.compile(r'-\d+|\d+')

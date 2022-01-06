@@ -2,7 +2,7 @@ from functools import reduce
 import copy
 
 lines = []
-with open('input.txt') as f:
+with open('../input/day20.txt') as f:
     lines = f.readlines()
 
 image_enhancer = lines[0].strip()
